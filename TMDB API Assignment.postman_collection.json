@@ -1,0 +1,858 @@
+{
+  "info": {
+    "_postman_id": "be182c10-96e2-4d3d-b426-82e82fa99577",
+    "name": "TMDB API Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57057950",
+    "_collection_link": "https://go.postman.co/collection/57057950-be182c10-96e2-4d3d-b426-82e82fa99577?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "TestAuthentication",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();\r",
+              "pm.test(\"Validate Status Code is 200\",function(){\r",
+              "pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Validate Response contains results[] array\",function(){\r",
+              " pm.expect(ResponseBody.results).to.be.an(\"array\");\r",
+              "});\r",
+              "pm.test(\"Validate That Movie Titles Are Relevant To The Search Keyword'\",function(){\r",
+              "    ResponseBody.results.forEach(function(movie){\r",
+              "        pm.expect(movie.title.toLowerCase()).to.include(\"inception\");\r",
+              "    });\r",
+              "});\r",
+              "pm.test(\"Validate Each Result Includes: id, title, release_date, overview\",function(){\r",
+              "    ResponseBody.results.forEach(function(movie){\r",
+              "        pm.expect(movie).to.have.property(\"id\");\r",
+              "        pm.expect(movie).to.have.property(\"title\");\r",
+              "        pm.expect(movie).to.have.property(\"overview\");\r",
+              "        pm.expect(movie).to.have.property(\"release_date\");\r",
+              "    });\r",
+              "});\r",
+              "pm.test(\"Confirm total_results > 0\", function () {\r",
+              "    pm.expect(ResponseBody.total_results).to.be.above(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true,
+        "disabledSystemHeaders": {
+          "accept": true
+        }
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://api.themoviedb.org/3/search/movie?query=inception&language=en-US\n\n",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "search",
+            "movie"
+          ],
+          "query": [
+            {
+              "key": "query",
+              "value": "inception"
+            },
+            {
+              "key": "language",
+              "value": "en-US\n\n"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SearchMoviesByKeyword",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Validate Status Code Equal 200\",function(){\r",
+              " pm.response.to.have.status(200);\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true,
+        "disabledSystemHeaders": {
+          "accept": true
+        }
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://api.themoviedb.org/3/search/movie?query=inception&language=en-US",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "search",
+            "movie"
+          ],
+          "query": [
+            {
+              "key": "query",
+              "value": "inception"
+            },
+            {
+              "key": "language",
+              "value": "en-US"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetMovieDetailsByMovieID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Validate presence of: title, overview, release_date, runtime\", function(){\r",
+              "    pm.expect(ResponseBody).to.have.property(\"title\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"overview\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"release_date\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"runtime\");\r",
+              "});\r",
+              "pm.test(\"Validate genres[] array is not empty\",function(){\r",
+              "    pm.expect(ResponseBody.genres).to.be.an(\"array\");\r",
+              "    pm.expect(ResponseBody.genres).to.have.length.above(0);\r",
+              "});\r",
+              "pm.test(\"Validate production_companies[] is present\",function(){\r",
+              "    pm.expect(ResponseBody.production_companies).to.be.an(\"array\");\r",
+              "    ResponseBody.production_companies.forEach(function(company){\r",
+              "    pm.expect(company).to.have.property(\"id\");\r",
+              "    pm.expect(company).to.have.property(\"name\");\r",
+              "    pm.expect(company).to.have.property(\"origin_country\");})\r",
+              "\r",
+              "});\r",
+              "pm.test(\"Vaildate That budget and revenue fields exist \", function () {\r",
+              "    pm.expect(ResponseBody).to.have.property(\"budget\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"revenue\");\r",
+              "    pm.expect(ResponseBody.budget).to.be.a(\"number\");\r",
+              "    pm.expect(ResponseBody.revenue).to.be.a(\"number\");\r",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/movie/302540",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "movie",
+            "302540"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetMovieCreditsPerson",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/person/17265/movie_credits",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "person",
+            "17265",
+            "movie_credits"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetPopulars",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/person/popular",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "person",
+            "popular"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetMovieCreditsMovieID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"ResponseBody includes cast[] and crew[] arrays \", function () {\r",
+              "    pm.expect(ResponseBody.cast).to.be.an('array');\r",
+              "    pm.expect(ResponseBody.crew).to.be.an('array');\r",
+              "});\r",
+              "pm.test(\"Validate each cast member includes: id, name, character, order\",function(){\r",
+              "ResponseBody.cast.forEach(function(member){\r",
+              "    pm.expect(member).to.have.property('id');\r",
+              "    pm.expect(member).to.have.property('name');\r",
+              "    pm.expect(member).to.have.property('character');\r",
+              "    pm.expect(member).to.have.property('order');\r",
+              "\r",
+              "});\r",
+              "});\r",
+              "pm.test(\"Vaildate tHAT cast list is not empty\", function(){\r",
+              "    pm.expect(ResponseBody.cast.length).to.be.above(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/movie/550/credits",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "movie",
+            "550",
+            "credits"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetPopularMovies",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Response contains results[] with 20 items per page\",function(){\r",
+              "    pm.expect(ResponseBody.results).to.be.an(\"array\");\r",
+              "    pm.expect(ResponseBody.results.length).to.equal(20);\r",
+              "});\r",
+              "pm.test(\"Validate presence of: page, total_pages, total_results\", function () {\r",
+              "    pm.expect(ResponseBody).to.have.property(\"page\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"total_pages\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"total_results\");\r",
+              "\r",
+              "});\r",
+              "pm.test(\"Vaildate that Each movie includes: id, title, vote_average, popularity\",function(){\r",
+              "    ResponseBody.results.forEach(function (movie) {\r",
+              "        pm.expect(movie).to.have.property(\"id\");\r",
+              "        pm.expect(movie).to.have.property(\"title\");\r",
+              "        pm.expect(movie).to.have.property(\"vote_average\");\r",
+              "        pm.expect(movie).to.have.property(\"popularity\");\r",
+              "});\r",
+              "});\r",
+              "pm.test(\"Movies are sorted by popularity descending\", function () {\r",
+              "\r",
+              "    for (let i = 0; i < ResponseBody.results.length - 1; i++) {\r",
+              "\r",
+              "        pm.expect(ResponseBody.results[i].popularity).to.be.at.least(\r",
+              "            ResponseBody.results[i + 1].popularity\r",
+              "        );\r",
+              "\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1\n",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "movie",
+            "popular"
+          ],
+          "query": [
+            {
+              "key": "language",
+              "value": "en-US"
+            },
+            {
+              "key": "page",
+              "value": "1\n"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetTV ShowDetailsByID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Validate presence of: name, overview, first_air_date, number_of_seasons\" ,function(){\r",
+              "    pm.expect(ResponseBody).to.have.property(\"name\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"overview\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"first_air_date\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"number_of_seasons\");\r",
+              "});\r",
+              "pm.test(\"Vaildate that Validate genres[] is not empty\",function(){\r",
+              "    pm.expect(ResponseBody.genres).to.not.be.empty;\r",
+              "    //contains id and name\r",
+              "    pm.expect(ResponseBody.genres[0]).to.have.property(\"id\");\r",
+              "    pm.expect(ResponseBody.genres[0]).to.have.property(\"name\");\r",
+              "});\r",
+              "pm.test(\"Confirm episode_run_time[] field exists\", function () {\r",
+              "    pm.expect(ResponseBody).to.have.property(\"episode_run_time\");\r",
+              "});\r",
+              "pm.test(\"Validate that Validate networks[] is not empty\", function () {\r",
+              "    pm.expect(ResponseBody.networks).to.be.an(\"array\");\r",
+              "    pm.expect(ResponseBody.networks).to.not.be.empty;\r",
+              "    pm.expect(ResponseBody.networks[0]).to.have.property(\"id\");\r",
+              "    pm.expect(ResponseBody.networks[0]).to.have.property(\"logo_path\");\r",
+              "    pm.expect(ResponseBody.networks[0]).to.have.property(\"name\");\r",
+              "    pm.expect(ResponseBody.networks[0]).to.have.property(\"origin_country\");\r",
+              "\r",
+              "\r",
+              "});\r",
+              "pm.test(\"Validate that Validate  created_by[] is not empty\", function () {\r",
+              "    pm.expect(ResponseBody.created_by).to.be.an(\"array\");\r",
+              "    pm.expect(ResponseBody.created_by).to.not.be.empty;\r",
+              "    pm.expect(ResponseBody.created_by[0]).to.have.property(\"id\");\r",
+              "    pm.expect(ResponseBody.created_by[0]).to.have.property(\"credit_id\");\r",
+              "    pm.expect(ResponseBody.created_by[0]).to.have.property(\"name\");\r",
+              "    pm.expect(ResponseBody.created_by[0]).to.have.property(\"original_name\");\r",
+              "    pm.expect(ResponseBody.created_by[0]).to.have.property(\"gender\");\r",
+              "    pm.expect(ResponseBody.created_by[0]).to.have.property(\"profile_path\");\r",
+              "    \r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/tv/273240",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "tv",
+            "273240"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetMovieGenresList",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody =pm.response.json();\r",
+              "pm.test(\" Validate Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\" Validate Response body contains genres\", function () {\r",
+              "    pm.expect(ResponseBody.genres).to.be.an(\"array\");\r",
+              "});\r",
+              "pm.test(\" Validate that genres like 'Action', 'Comedy', 'Drama' are present\", function () {\r",
+              "    pm.expect(JSON.stringify(ResponseBody.genres)).to.include(\"Action\");\r",
+              "    pm.expect(JSON.stringify(ResponseBody.genres)).to.include(\"Comedy\");\r",
+              "    pm.expect(JSON.stringify(ResponseBody.genres)).to.include(\"Drama\");\r",
+              "});\r",
+              "pm.test(\" Validate that Each genre has: id and name fields\", function () {\r",
+              "    ResponseBody.genres.forEach(function (genre) {\r",
+              "        pm.expect(genre).to.have.property(\"id\");\r",
+              "        pm.expect(genre).to.have.property(\"name\");\r",
+              "})\r",
+              "});\r",
+              "pm.test(\"Validate that Confirm list is not empty\",function(){\r",
+              "    pm.expect(ResponseBody.genres).to.not.be.empty;\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/genre/movie/list?language=en",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "genre",
+            "movie",
+            "list"
+          ],
+          "query": [
+            {
+              "key": "language",
+              "value": "en"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DiscoverMoviesByGenre",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Vaildate that Response contains results[] filtered by the given genre\",function(){\r",
+              "ResponseBody.results.forEach(function(genre){\r",
+              "    pm.expect(genre.genre_ids).to.include(28);\r",
+              "});\r",
+              "});\r",
+              "pm.test(\"Validate that each movie includes: id, title, genre_ids[], vote_average\", function () {\r",
+              "    ResponseBody.results.forEach(function (movie) {\r",
+              "        pm.expect(movie).to.have.property('id');\r",
+              "        pm.expect(movie).to.have.property('title');\r",
+              "        pm.expect(movie).to.have.property('genre_ids');\r",
+              "        pm.expect(movie).to.have.property('vote_average');\r",
+              "});\r",
+              "});\r",
+              "pm.test(\"Validate that genre_id appears in genre_ids[] for each result\", function () {\r",
+              "    ResponseBody.results.forEach(function(genre){\r",
+              "    pm.expect(genre.genre_ids).to.include(28);\r",
+              "});\r",
+              "});\r",
+              "pm.test(\"Validate that pagination fields: page, total_pages, total_results\", function () {\r",
+              "  pm.expect(ResponseBody).to.have.property(\"total_pages\");\r",
+              "    pm.expect(ResponseBody).to.have.property(\"total_results\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/discover/movie?with_genres=28&sort_by=popularity.desc",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "discover",
+            "movie"
+          ],
+          "query": [
+            {
+              "key": "with_genres",
+              "value": "28"
+            },
+            {
+              "key": "sort_by",
+              "value": "popularity.desc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetNowPlayingMovies",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();\r",
+              "const minimum = new Date(ResponseBody.dates.minimum);\r",
+              "const maximum = new Date(ResponseBody.dates.maximum);\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Vaildate that Response contains results[] and dates{} object\",function () {\r",
+              "    pm.expect(ResponseBody.dates).to.be.an(\"object\");\r",
+              "    pm.expect(ResponseBody.results).to.be.an(\"array\");\r",
+              "});\r",
+              "pm.test(\"Validate that dates{} includes: maximum and minimum (date range) fields\", function () {\r",
+              "    pm.expect(ResponseBody.dates).to.have.property(\"maximum\");\r",
+              "    pm.expect(ResponseBody.dates).to.have.property(\"minimum\");\r",
+              "});\r",
+              "pm.test(\"Validate that Each movie includes: id, title, release_date, vote_count\", function () {\r",
+              "    ResponseBody.results.forEach(function(movie){\r",
+              "        pm.expect(movie).to.have.property(\"id\");\r",
+              "        pm.expect(movie).to.have.property(\"title\");\r",
+              "        pm.expect(movie).to.have.property(\"release_date\");\r",
+              "        pm.expect(movie).to.have.property(\"vote_count\");\r",
+              "    });\r",
+              "    });\r",
+              "pm.test(\"Validate dates object exists\", function () {\r",
+              "    pm.expect(ResponseBody.dates).to.be.an(\"object\");\r",
+              "});\r",
+              "pm.test(\"Validate dates contains maximum\", function () {\r",
+              "    pm.expect(ResponseBody.dates).to.have.property(\"maximum\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Validate dates contains minimum\", function () {\r",
+              "    pm.expect(ResponseBody.dates).to.have.property(\"minimum\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "movie",
+            "now_playing"
+          ],
+          "query": [
+            {
+              "key": "language",
+              "value": "en-US"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetPersonDetails",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();    \r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Validate presence of: name, biography, birthday, place_of_birth\", function () {\r",
+              "    pm.expect(ResponseBody.name).to.include(\"Anne Hathaway\");\r",
+              "    pm.expect(ResponseBody.biography).to.include(\"Anne Jacqueline Hathaway\");\r",
+              "    pm.expect(ResponseBody.birthday).to.include(\"1982-11-12\");\r",
+              "    pm.expect(ResponseBody.place_of_birth).to.include(\"Brooklyn, New York City, New York, USA\");\r",
+              "});\r",
+              "pm.test(\"Validate Confirm known_for_department field exists\", function () {\r",
+              "    pm.expect(ResponseBody).to.have.property(\"known_for_department\");\r",
+              "    pm.expect(ResponseBody.known_for_department).to.include(\"Acting\");\r",
+              "});\r",
+              "pm.test(\"Validate popularity score is a number\", function () {\r",
+              "    pm.expect(ResponseBody.popularity).to.be.a('number');\r",
+              "    });\r",
+              "pm.test(\"Validatealso_known_as[] array is present\", function () {\r",
+              "    pm.expect(ResponseBody.also_known_as).to.be.an('array');\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.themoviedb.org/3/person/1813",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "person",
+            "1813"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AddMovietoWatchlist",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const ResponseBody = pm.response.json();\r",
+              "const RequestBody = JSON.parse(pm.request.body.raw);\r",
+              "\r",
+              "pm.test(\"Validate status code\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Validate success is true\", function () {\r",
+              "    pm.expect(ResponseBody.success).to.be.true;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Validate status_message confirms item was added\", function () {\r",
+              "    pm.expect(ResponseBody.status_message).to.include(\"updated successfully\");\r",
+              "});\r",
+              "pm.test(\"Second request returns 200 OK\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Validate media_type is movie\", function () {\r",
+              "    pm.expect(RequestBody.media_type).to.eql(\"movie\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Validate media_id is 550\", function () {\r",
+              "    pm.expect(RequestBody.media_id).to.eql(550);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{  \"media_type\": \"movie\",  \"media_id\": 550,  \"watchlist\": true}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://api.themoviedb.org/3/account/23594753/watchlist?account_=23594753",
+          "protocol": "https",
+          "host": [
+            "api",
+            "themoviedb",
+            "org"
+          ],
+          "path": [
+            "3",
+            "account",
+            "23594753",
+            "watchlist"
+          ],
+          "query": [
+            {
+              "key": "account_",
+              "value": "23594753"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyOWRlMWFmYzE0MWU0ZmE4YTQ1NDI5YTk3NDY5ZWRiMyIsIm5iZiI6MTc4NjU2MzIzOS45OTIsInN1YiI6IjZhN2NjYWE3YWQ2MmJlOGVmZGM3YWZmYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Jeyur2kMIWdWLxn0RUAF_6J99qFFWhrZ6qGIqdDlXdw",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
